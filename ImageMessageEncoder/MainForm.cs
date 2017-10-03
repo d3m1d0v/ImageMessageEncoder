@@ -39,35 +39,18 @@ namespace ImageMessageEncoder
                 return;
             }
 
-            string path = pathToSaveImageTB.Text;
+            ManageEncodeControls(false);
 
-            try
-            {
-                using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-                {
-                    encodeManager.EncodeMessageToImage(textToEncRTB.Text).Save(fs, ImageFormat.Png);
-                }
-                
-                MessageBox.Show(this, string.Format("{0} {1}",
-                                            "Изображение с закодированным сообщением было сохранено по адресу",
-                                            path),
-                            "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (InvalidOperationException)
-            {
-                MessageBox.Show(this, "Ошибка: невозможно вместить всё сообщение в эту картинку!", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "Ошибка при записи файла", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            object[] objs = new object[2];
+            objs[0] = textToEncRTB.Text;
+            objs[1] = pathToSaveImageTB.Text;
+
+            encodeBgWorker.RunWorkerAsync(objs);
         }
 
         private void decPerformBtn_Click(object sender, EventArgs e)
         {
-            if (origImagePB.Image == null || changedImagePB.Image == null)
+            if (!CanDecodingBePerformed())
             {
                 MessageBox.Show("Error");
                 return;
@@ -78,16 +61,9 @@ namespace ImageMessageEncoder
                 decodeManager.OriginalImage = (Bitmap)origImagePB.Image;
             }
 
-            try
-            {
-                decodedMessageRTB.Text =
-                    decodeManager.DecodeMessageFromImage((Bitmap)changedImagePB.Image);
-            }
-            catch (InvalidOperationException)
-            {
-                MessageBox.Show(this, "Невозможно декодировать сообщения: разные картинки", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            ManageDecodeControls(false);
+
+            decodeBgWorker.RunWorkerAsync();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -255,6 +231,80 @@ namespace ImageMessageEncoder
 
         ////////////////////////////////////////////////////////////////////////////////////
 
+        private void encodeBgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Bitmap image;
+
+            try
+            {
+                image = encodeManager.EncodeMessageToImage((string)((object[])e.Argument)[0]);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception("Ошибка: невозможно вместить всё сообщение в эту картинку!", ex);
+            }
+
+            try
+            {
+                using (FileStream fs = new FileStream((string)((object[])e.Argument)[1],
+                    FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+                {
+                    image.Save(fs, ImageFormat.Png);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка при записи файла", ex);
+            }
+        }
+
+        private void encodeBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(this, e.Error.Message, "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(this, string.Format("{0} {1}",
+                                        "Изображение с закодированным сообщением было сохранено по адресу",
+                                        pathToSaveImageTB.Text),
+                                "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            ManageEncodeControls(true);
+        }
+
+        private void decodeBgWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                e.Result =
+                    decodeManager.DecodeMessageFromImage((Bitmap)changedImagePB.Image);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception("Невозможно декодировать сообщение: разные картинки", ex);
+            }
+        }
+
+        private void decodeBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show(this, e.Error.Message, "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            decodedMessageRTB.Text = (string)e.Result;
+
+            ManageDecodeControls(true);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+
         private void EncPerformBtnEnabler()
         {
             encPerformBtn.Enabled = CanEncodingBePerformed();
@@ -265,6 +315,12 @@ namespace ImageMessageEncoder
             return pathToImageTB.TextLength > 0 && 
                 pathToSaveImageTB.TextLength > 0 &&
                 textToEncRTB.TextLength > 0;
+        }
+
+        private bool CanDecodingBePerformed()
+        {
+            return origImagePB.Image != null &&
+                changedImagePB.Image != null;
         }
 
         private void WriteTextToTextBox(TextBox tb, string text)
@@ -312,6 +368,27 @@ namespace ImageMessageEncoder
             }
 
             return image;
+        }
+
+        private void ManageEncodeControls(bool state)
+        {
+            encImageChooseBtn.Enabled = state;
+            encImageSaveBtn.Enabled = state;
+            textToEncRTB.ReadOnly = !state;
+            encPerformBtn.Enabled = state;
+            encImageTLP.AllowDrop = state;
+
+            encPerformBtn.Text = state ? "Выполнить" : "Выполняется...";
+        }
+
+        private void ManageDecodeControls(bool state)
+        {
+            decPerformBtn.Enabled = state;
+            decOrigImageChooseBtn.Enabled = state;
+            decChangedImageChooseBtn.Enabled = state;
+            pictureBoxesToDecTLP.AllowDrop = state;
+
+            decPerformBtn.Text = state ? "Выполнить" : "Выполняется...";
         }
     }
 }
