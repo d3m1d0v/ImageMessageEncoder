@@ -44,7 +44,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.imageToEncPB = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBoxesToDecTLP = new System.Windows.Forms.TableLayoutPanel();
             this.changedImagePB = new System.Windows.Forms.PictureBox();
             this.origImagePB = new System.Windows.Forms.PictureBox();
             this.saveDecodedMessageBtn = new System.Windows.Forms.Button();
@@ -61,13 +61,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
+            this.encImageTLP = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imageToEncPB)).BeginInit();
             this.tabPage2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.pictureBoxesToDecTLP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.changedImagePB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.origImagePB)).BeginInit();
+            this.encImageTLP.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -86,6 +88,7 @@
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.tabPage1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabPage1.Controls.Add(this.encImageTLP);
             this.tabPage1.Controls.Add(this.linesCountInEncTextLbl);
             this.tabPage1.Controls.Add(this.symbolsCountInEncTextLbl);
             this.tabPage1.Controls.Add(this.encPerformBtn);
@@ -98,7 +101,6 @@
             this.tabPage1.Controls.Add(this.encImageChooseBtn);
             this.tabPage1.Controls.Add(this.pathToImageTB);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.imageToEncPB);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -235,9 +237,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.imageToEncPB.BackColor = System.Drawing.SystemColors.ControlDark;
             this.imageToEncPB.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.imageToEncPB.Location = new System.Drawing.Point(6, 6);
+            this.imageToEncPB.Location = new System.Drawing.Point(3, 3);
             this.imageToEncPB.Name = "imageToEncPB";
-            this.imageToEncPB.Size = new System.Drawing.Size(396, 458);
+            this.imageToEncPB.Size = new System.Drawing.Size(387, 452);
             this.imageToEncPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.imageToEncPB.TabIndex = 0;
             this.imageToEncPB.TabStop = false;
@@ -246,7 +248,7 @@
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.tabPage2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tabPage2.Controls.Add(this.tableLayoutPanel1);
+            this.tabPage2.Controls.Add(this.pictureBoxesToDecTLP);
             this.tabPage2.Controls.Add(this.saveDecodedMessageBtn);
             this.tabPage2.Controls.Add(this.decPerformBtn);
             this.tabPage2.Controls.Add(this.progressBar2);
@@ -265,22 +267,25 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Раскодировать";
             // 
-            // tableLayoutPanel1
+            // pictureBoxesToDecTLP
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.pictureBoxesToDecTLP.AllowDrop = true;
+            this.pictureBoxesToDecTLP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.changedImagePB, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.origImagePB, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 6);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 268);
-            this.tableLayoutPanel1.TabIndex = 15;
+            this.pictureBoxesToDecTLP.ColumnCount = 2;
+            this.pictureBoxesToDecTLP.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.pictureBoxesToDecTLP.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.pictureBoxesToDecTLP.Controls.Add(this.changedImagePB, 1, 0);
+            this.pictureBoxesToDecTLP.Controls.Add(this.origImagePB, 0, 0);
+            this.pictureBoxesToDecTLP.Location = new System.Drawing.Point(6, 6);
+            this.pictureBoxesToDecTLP.Name = "pictureBoxesToDecTLP";
+            this.pictureBoxesToDecTLP.RowCount = 1;
+            this.pictureBoxesToDecTLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.pictureBoxesToDecTLP.Size = new System.Drawing.Size(760, 268);
+            this.pictureBoxesToDecTLP.TabIndex = 15;
+            this.pictureBoxesToDecTLP.DragDrop += new System.Windows.Forms.DragEventHandler(this.pictureBoxesToDecTLP_DragDrop);
+            this.pictureBoxesToDecTLP.DragEnter += new System.Windows.Forms.DragEventHandler(this.pictureBoxesToDecTLP_DragEnter);
             // 
             // changedImagePB
             // 
@@ -437,6 +442,24 @@
             // 
             this.saveFileDialog2.Filter = "TXT (*.txt)|*.txt";
             // 
+            // encImageTLP
+            // 
+            this.encImageTLP.AllowDrop = true;
+            this.encImageTLP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.encImageTLP.ColumnCount = 1;
+            this.encImageTLP.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.encImageTLP.Controls.Add(this.imageToEncPB, 0, 0);
+            this.encImageTLP.Location = new System.Drawing.Point(6, 6);
+            this.encImageTLP.Name = "encImageTLP";
+            this.encImageTLP.RowCount = 1;
+            this.encImageTLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.encImageTLP.Size = new System.Drawing.Size(393, 458);
+            this.encImageTLP.TabIndex = 13;
+            this.encImageTLP.DragDrop += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragDrop);
+            this.encImageTLP.DragEnter += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragEnter);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -451,9 +474,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.imageToEncPB)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.pictureBoxesToDecTLP.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.changedImagePB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.origImagePB)).EndInit();
+            this.encImageTLP.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -490,9 +514,10 @@
         private System.Windows.Forms.RichTextBox decodedMessageRTB;
         private System.Windows.Forms.Button saveDecodedMessageBtn;
         private System.Windows.Forms.Button decPerformBtn;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel pictureBoxesToDecTLP;
         private System.Windows.Forms.SaveFileDialog saveFileDialog2;
         private System.Windows.Forms.Label linesCountInEncTextLbl;
+        private System.Windows.Forms.TableLayoutPanel encImageTLP;
     }
 }
 

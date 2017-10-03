@@ -72,6 +72,11 @@ namespace ImageMessageEncoder
                 MessageBox.Show("Error");
                 return;
             }
+            
+            if(decodeManager.OriginalImage != origImagePB.Image)
+            {
+                decodeManager.OriginalImage = (Bitmap)origImagePB.Image;
+            }
 
             try
             {
@@ -89,21 +94,11 @@ namespace ImageMessageEncoder
 
         private void encImageChooseBtn_Click(object sender, EventArgs e)
         {
-            if(openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK &&
+                LoadImage(openFileDialog1.FileName, imageToEncPB, pathToImageTB))
             {
-                string path = openFileDialog1.FileName;
-
-                Bitmap image = LoadImageFromFS(path);
-
-                if(image != null)
-                {
-                    imageToEncPB.Image = image;
-                    encodeManager.OriginalImage = image;
-
-                    WriteTextToTextBox(pathToImageTB, path);
-
-                    EncPerformBtnEnabler();
-                }
+                encodeManager.OriginalImage = (Bitmap)imageToEncPB.Image;
+                EncPerformBtnEnabler();
             }
         }
 
@@ -122,17 +117,7 @@ namespace ImageMessageEncoder
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string path = openFileDialog1.FileName;
-
-                Bitmap image = LoadImageFromFS(path);
-
-                if (image != null)
-                {
-                    decodeManager.OriginalImage = image;
-                    origImagePB.Image = image;
-
-                    WriteTextToTextBox(decOrigImagePathTB, path);
-                }
+                LoadImage(openFileDialog1.FileName, origImagePB, decOrigImagePathTB);
             }
         }
 
@@ -140,16 +125,7 @@ namespace ImageMessageEncoder
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string path = openFileDialog1.FileName;
-
-                Bitmap image = LoadImageFromFS(path);
-
-                if (image != null)
-                {
-                    changedImagePB.Image = image;
-
-                    WriteTextToTextBox(decChangedImagePathTB, path);
-                }
+                LoadImage(openFileDialog1.FileName, changedImagePB, decChangedImagePathTB);
             }
         }
 
@@ -203,6 +179,82 @@ namespace ImageMessageEncoder
 
         ////////////////////////////////////////////////////////////////////////////////////
 
+        private void encImageTLP_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
+                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (paths.Length == 1 && paths[0].ToLower().EndsWith(".png"))
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
+        }
+
+        private void encImageTLP_DragDrop(object sender, DragEventArgs e)
+        {
+            if (LoadImage(((string[])e.Data.GetData(DataFormats.FileDrop))[0], imageToEncPB, pathToImageTB))
+            {
+                encodeManager.OriginalImage = (Bitmap)imageToEncPB.Image;
+                EncPerformBtnEnabler();
+            }
+        }
+
+        private void pictureBoxesToDecTLP_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
+                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (
+                    paths.Length == 1 && paths[0].ToLower().EndsWith(".png") ||
+                    paths.Length == 2 && paths[0].ToLower().EndsWith(".png") &&
+                        paths[1].ToLower().EndsWith(".png")
+                    )
+                {
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
+        }
+
+        private void pictureBoxesToDecTLP_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.Length > 1)
+            {
+                Image image0 = LoadImageFromFS(files[0]);
+                Image image1 = LoadImageFromFS(files[1]);
+
+                if (image0 != null && image1 != null)
+                {
+                    if (!image0.Equals(origImagePB.Image))
+                    {
+                        origImagePB.Image = image0;
+                        WriteTextToTextBox(decOrigImagePathTB, files[0]);
+                    }
+
+                    if (!image1.Equals(changedImagePB.Image))
+                    {
+                        WriteTextToTextBox(decChangedImagePathTB, files[1]);
+                        changedImagePB.Image = image1;
+                    }
+                }
+            }
+            else
+            {
+                if (e.X < changedImagePB.PointToScreen(Point.Empty).X)
+                {
+                    LoadImage(files[0], origImagePB, decOrigImagePathTB);
+                }
+                else
+                {
+                    LoadImage(files[0], changedImagePB, decChangedImagePathTB);
+                }
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+
         private void EncPerformBtnEnabler()
         {
             encPerformBtn.Enabled = CanEncodingBePerformed();
@@ -220,6 +272,21 @@ namespace ImageMessageEncoder
             tb.Text = text;
             tb.SelectionStart = tb.TextLength;
             tb.ScrollToCaret();
+        }
+
+        private bool LoadImage(string path, PictureBox pb, TextBox tb)
+        {
+            bool isImageLoaded = false;
+
+            Image image = LoadImageFromFS(path);
+            if(image != null && !image.Equals(pb.Image))
+            {
+                pb.Image = image;
+                WriteTextToTextBox(tb, path);
+                isImageLoaded = true;
+            }
+
+            return isImageLoaded;
         }
 
         private Bitmap LoadImageFromFS(string pathToImage)
