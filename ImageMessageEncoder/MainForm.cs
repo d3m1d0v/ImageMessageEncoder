@@ -170,6 +170,14 @@ namespace ImageMessageEncoder
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
             }
         }
 
@@ -195,6 +203,14 @@ namespace ImageMessageEncoder
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
             }
         }
 
