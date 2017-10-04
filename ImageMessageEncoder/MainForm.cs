@@ -25,9 +25,15 @@ namespace ImageMessageEncoder
             linesCountInEncTextLbl.Text =
                 string.Format("Кол-во строк: {0}", textToEncRTB.Lines.Length);
 
+            textToEncRTB.AllowDrop = true;
+            textToEncRTB.DragEnter += textToEncRTB_DragEnter;
+            textToEncRTB.DragDrop += textToEncRTB_DragDrop;
+
             encodeManager = new ImageMessageEncodeManager(null);
             decodeManager = new ImageMessageEncodeManager(null);
         }
+
+        
 
         ////////////////////////////////////////////////////////////////////////////////////
 
@@ -164,6 +170,14 @@ namespace ImageMessageEncoder
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
             }
         }
 
@@ -189,6 +203,14 @@ namespace ImageMessageEncoder
                 {
                     e.Effect = DragDropEffects.Copy;
                 }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
             }
         }
 
@@ -305,6 +327,58 @@ namespace ImageMessageEncoder
 
         ////////////////////////////////////////////////////////////////////////////////////
 
+        private void textToEncRTB_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+            {
+                string[] paths = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (paths.Length == 1 &&
+                    (paths[0].ToLower().EndsWith(".txt") ||
+                    paths[0].ToLower().EndsWith(".rtf")))
+                {
+
+                    e.Effect = DragDropEffects.Copy;
+                }
+                else
+                {
+                    e.Effect = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void textToEncRTB_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] paths = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (paths != null && !string.IsNullOrWhiteSpace(paths[0]))
+            {
+                RichTextBoxStreamType type = RichTextBoxStreamType.PlainText;
+                if (paths[0].ToLower().EndsWith(".rtf"))
+                {
+                    type = RichTextBoxStreamType.RichText;
+                }
+
+                RichTextBox rtb = sender as RichTextBox;
+                rtb.Clear();
+                try
+                {
+                    rtb.LoadFile(paths[0], type);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message, "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                EncPerformBtnEnabler();
+            }
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////
+
         private void EncPerformBtnEnabler()
         {
             encPerformBtn.Enabled = CanEncodingBePerformed();
@@ -375,6 +449,7 @@ namespace ImageMessageEncoder
             encImageChooseBtn.Enabled = state;
             encImageSaveBtn.Enabled = state;
             textToEncRTB.ReadOnly = !state;
+            textToEncRTB.AllowDrop = state;
             encPerformBtn.Enabled = state;
             encImageTLP.AllowDrop = state;
 
