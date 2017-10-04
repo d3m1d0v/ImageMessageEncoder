@@ -449,6 +449,7 @@ namespace ImageMessageEncoder
             encImageChooseBtn.Enabled = state;
             encImageSaveBtn.Enabled = state;
             textToEncRTB.ReadOnly = !state;
+            textToEncRTB.AllowDrop = state;
             encPerformBtn.Enabled = state;
             encImageTLP.AllowDrop = state;
 
