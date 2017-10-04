@@ -29,12 +29,13 @@
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.encodeTabPage = new System.Windows.Forms.TabPage();
+            this.encImageTLP = new System.Windows.Forms.TableLayoutPanel();
+            this.imageToEncPB = new System.Windows.Forms.PictureBox();
             this.linesCountInEncTextLbl = new System.Windows.Forms.Label();
             this.symbolsCountInEncTextLbl = new System.Windows.Forms.Label();
             this.encPerformBtn = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.textToEncRTB = new System.Windows.Forms.RichTextBox();
             this.encImageSaveBtn = new System.Windows.Forms.Button();
             this.pathToSaveImageTB = new System.Windows.Forms.TextBox();
@@ -42,14 +43,12 @@
             this.encImageChooseBtn = new System.Windows.Forms.Button();
             this.pathToImageTB = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.imageToEncPB = new System.Windows.Forms.PictureBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.decodeTabPage = new System.Windows.Forms.TabPage();
             this.pictureBoxesToDecTLP = new System.Windows.Forms.TableLayoutPanel();
             this.changedImagePB = new System.Windows.Forms.PictureBox();
             this.origImagePB = new System.Windows.Forms.PictureBox();
             this.saveDecodedMessageBtn = new System.Windows.Forms.Button();
             this.decPerformBtn = new System.Windows.Forms.Button();
-            this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.label6 = new System.Windows.Forms.Label();
             this.decodedMessageRTB = new System.Windows.Forms.RichTextBox();
             this.decChangedImageChooseBtn = new System.Windows.Forms.Button();
@@ -61,21 +60,22 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.saveFileDialog2 = new System.Windows.Forms.SaveFileDialog();
-            this.encImageTLP = new System.Windows.Forms.TableLayoutPanel();
+            this.encodeBgWorker = new System.ComponentModel.BackgroundWorker();
+            this.decodeBgWorker = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.encodeTabPage.SuspendLayout();
+            this.encImageTLP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imageToEncPB)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.decodeTabPage.SuspendLayout();
             this.pictureBoxesToDecTLP.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.changedImagePB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.origImagePB)).BeginInit();
-            this.encImageTLP.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.encodeTabPage);
+            this.tabControl1.Controls.Add(this.decodeTabPage);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Multiline = true;
@@ -84,35 +84,66 @@
             this.tabControl1.Size = new System.Drawing.Size(782, 553);
             this.tabControl1.TabIndex = 0;
             // 
-            // tabPage1
+            // encodeTabPage
             // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.tabPage1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tabPage1.Controls.Add(this.encImageTLP);
-            this.tabPage1.Controls.Add(this.linesCountInEncTextLbl);
-            this.tabPage1.Controls.Add(this.symbolsCountInEncTextLbl);
-            this.tabPage1.Controls.Add(this.encPerformBtn);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.progressBar1);
-            this.tabPage1.Controls.Add(this.textToEncRTB);
-            this.tabPage1.Controls.Add(this.encImageSaveBtn);
-            this.tabPage1.Controls.Add(this.pathToSaveImageTB);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.encImageChooseBtn);
-            this.tabPage1.Controls.Add(this.pathToImageTB);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(774, 524);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Закодировать";
+            this.encodeTabPage.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.encodeTabPage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.encodeTabPage.Controls.Add(this.encImageTLP);
+            this.encodeTabPage.Controls.Add(this.linesCountInEncTextLbl);
+            this.encodeTabPage.Controls.Add(this.symbolsCountInEncTextLbl);
+            this.encodeTabPage.Controls.Add(this.encPerformBtn);
+            this.encodeTabPage.Controls.Add(this.label3);
+            this.encodeTabPage.Controls.Add(this.textToEncRTB);
+            this.encodeTabPage.Controls.Add(this.encImageSaveBtn);
+            this.encodeTabPage.Controls.Add(this.pathToSaveImageTB);
+            this.encodeTabPage.Controls.Add(this.label2);
+            this.encodeTabPage.Controls.Add(this.encImageChooseBtn);
+            this.encodeTabPage.Controls.Add(this.pathToImageTB);
+            this.encodeTabPage.Controls.Add(this.label1);
+            this.encodeTabPage.Location = new System.Drawing.Point(4, 25);
+            this.encodeTabPage.Name = "encodeTabPage";
+            this.encodeTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.encodeTabPage.Size = new System.Drawing.Size(774, 524);
+            this.encodeTabPage.TabIndex = 0;
+            this.encodeTabPage.Text = "Закодировать";
+            // 
+            // encImageTLP
+            // 
+            this.encImageTLP.AllowDrop = true;
+            this.encImageTLP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.encImageTLP.ColumnCount = 1;
+            this.encImageTLP.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.encImageTLP.Controls.Add(this.imageToEncPB, 0, 0);
+            this.encImageTLP.Location = new System.Drawing.Point(6, 6);
+            this.encImageTLP.Name = "encImageTLP";
+            this.encImageTLP.RowCount = 1;
+            this.encImageTLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.encImageTLP.Size = new System.Drawing.Size(393, 509);
+            this.encImageTLP.TabIndex = 13;
+            this.encImageTLP.DragDrop += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragDrop);
+            this.encImageTLP.DragEnter += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragEnter);
+            // 
+            // imageToEncPB
+            // 
+            this.imageToEncPB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.imageToEncPB.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.imageToEncPB.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.imageToEncPB.Location = new System.Drawing.Point(3, 3);
+            this.imageToEncPB.Name = "imageToEncPB";
+            this.imageToEncPB.Size = new System.Drawing.Size(387, 503);
+            this.imageToEncPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.imageToEncPB.TabIndex = 0;
+            this.imageToEncPB.TabStop = false;
             // 
             // linesCountInEncTextLbl
             // 
             this.linesCountInEncTextLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.linesCountInEncTextLbl.AutoSize = true;
-            this.linesCountInEncTextLbl.Location = new System.Drawing.Point(405, 438);
+            this.linesCountInEncTextLbl.Location = new System.Drawing.Point(405, 488);
             this.linesCountInEncTextLbl.Name = "linesCountInEncTextLbl";
             this.linesCountInEncTextLbl.Size = new System.Drawing.Size(118, 17);
             this.linesCountInEncTextLbl.TabIndex = 12;
@@ -122,7 +153,7 @@
             // 
             this.symbolsCountInEncTextLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.symbolsCountInEncTextLbl.AutoSize = true;
-            this.symbolsCountInEncTextLbl.Location = new System.Drawing.Point(405, 419);
+            this.symbolsCountInEncTextLbl.Location = new System.Drawing.Point(405, 469);
             this.symbolsCountInEncTextLbl.Name = "symbolsCountInEncTextLbl";
             this.symbolsCountInEncTextLbl.Size = new System.Drawing.Size(143, 17);
             this.symbolsCountInEncTextLbl.TabIndex = 11;
@@ -132,9 +163,9 @@
             // 
             this.encPerformBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.encPerformBtn.Enabled = false;
-            this.encPerformBtn.Location = new System.Drawing.Point(668, 470);
+            this.encPerformBtn.Location = new System.Drawing.Point(644, 458);
             this.encPerformBtn.Name = "encPerformBtn";
-            this.encPerformBtn.Size = new System.Drawing.Size(98, 46);
+            this.encPerformBtn.Size = new System.Drawing.Size(122, 58);
             this.encPerformBtn.TabIndex = 10;
             this.encPerformBtn.Text = "Выполнить";
             this.encPerformBtn.UseVisualStyleBackColor = true;
@@ -150,22 +181,13 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "Текст, который необходимо спрятать";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(6, 470);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(656, 46);
-            this.progressBar1.TabIndex = 8;
-            // 
             // textToEncRTB
             // 
             this.textToEncRTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textToEncRTB.Location = new System.Drawing.Point(408, 156);
             this.textToEncRTB.Name = "textToEncRTB";
-            this.textToEncRTB.Size = new System.Drawing.Size(358, 253);
+            this.textToEncRTB.Size = new System.Drawing.Size(358, 296);
             this.textToEncRTB.TabIndex = 7;
             this.textToEncRTB.Text = "";
             this.textToEncRTB.TextChanged += new System.EventHandler(this.textToEncRTB_TextChanged);
@@ -230,42 +252,27 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Выбрать картинку";
             // 
-            // imageToEncPB
+            // decodeTabPage
             // 
-            this.imageToEncPB.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.imageToEncPB.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.imageToEncPB.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.imageToEncPB.Location = new System.Drawing.Point(3, 3);
-            this.imageToEncPB.Name = "imageToEncPB";
-            this.imageToEncPB.Size = new System.Drawing.Size(387, 452);
-            this.imageToEncPB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.imageToEncPB.TabIndex = 0;
-            this.imageToEncPB.TabStop = false;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.tabPage2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tabPage2.Controls.Add(this.pictureBoxesToDecTLP);
-            this.tabPage2.Controls.Add(this.saveDecodedMessageBtn);
-            this.tabPage2.Controls.Add(this.decPerformBtn);
-            this.tabPage2.Controls.Add(this.progressBar2);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.decodedMessageRTB);
-            this.tabPage2.Controls.Add(this.decChangedImageChooseBtn);
-            this.tabPage2.Controls.Add(this.decChangedImagePathTB);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.decOrigImageChooseBtn);
-            this.tabPage2.Controls.Add(this.decOrigImagePathTB);
-            this.tabPage2.Controls.Add(this.label4);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(774, 524);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Раскодировать";
+            this.decodeTabPage.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.decodeTabPage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.decodeTabPage.Controls.Add(this.pictureBoxesToDecTLP);
+            this.decodeTabPage.Controls.Add(this.saveDecodedMessageBtn);
+            this.decodeTabPage.Controls.Add(this.decPerformBtn);
+            this.decodeTabPage.Controls.Add(this.label6);
+            this.decodeTabPage.Controls.Add(this.decodedMessageRTB);
+            this.decodeTabPage.Controls.Add(this.decChangedImageChooseBtn);
+            this.decodeTabPage.Controls.Add(this.decChangedImagePathTB);
+            this.decodeTabPage.Controls.Add(this.label5);
+            this.decodeTabPage.Controls.Add(this.decOrigImageChooseBtn);
+            this.decodeTabPage.Controls.Add(this.decOrigImagePathTB);
+            this.decodeTabPage.Controls.Add(this.label4);
+            this.decodeTabPage.Location = new System.Drawing.Point(4, 25);
+            this.decodeTabPage.Name = "decodeTabPage";
+            this.decodeTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.decodeTabPage.Size = new System.Drawing.Size(774, 524);
+            this.decodeTabPage.TabIndex = 1;
+            this.decodeTabPage.Text = "Раскодировать";
             // 
             // pictureBoxesToDecTLP
             // 
@@ -282,7 +289,7 @@
             this.pictureBoxesToDecTLP.Name = "pictureBoxesToDecTLP";
             this.pictureBoxesToDecTLP.RowCount = 1;
             this.pictureBoxesToDecTLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.pictureBoxesToDecTLP.Size = new System.Drawing.Size(760, 268);
+            this.pictureBoxesToDecTLP.Size = new System.Drawing.Size(760, 292);
             this.pictureBoxesToDecTLP.TabIndex = 15;
             this.pictureBoxesToDecTLP.DragDrop += new System.Windows.Forms.DragEventHandler(this.pictureBoxesToDecTLP_DragDrop);
             this.pictureBoxesToDecTLP.DragEnter += new System.Windows.Forms.DragEventHandler(this.pictureBoxesToDecTLP_DragEnter);
@@ -296,7 +303,7 @@
             this.changedImagePB.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.changedImagePB.Location = new System.Drawing.Point(383, 3);
             this.changedImagePB.Name = "changedImagePB";
-            this.changedImagePB.Size = new System.Drawing.Size(374, 262);
+            this.changedImagePB.Size = new System.Drawing.Size(374, 286);
             this.changedImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.changedImagePB.TabIndex = 0;
             this.changedImagePB.TabStop = false;
@@ -310,7 +317,7 @@
             this.origImagePB.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.origImagePB.Location = new System.Drawing.Point(3, 3);
             this.origImagePB.Name = "origImagePB";
-            this.origImagePB.Size = new System.Drawing.Size(374, 262);
+            this.origImagePB.Size = new System.Drawing.Size(374, 286);
             this.origImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.origImagePB.TabIndex = 0;
             this.origImagePB.TabStop = false;
@@ -319,9 +326,9 @@
             // 
             this.saveDecodedMessageBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.saveDecodedMessageBtn.Enabled = false;
-            this.saveDecodedMessageBtn.Location = new System.Drawing.Point(213, 384);
+            this.saveDecodedMessageBtn.Location = new System.Drawing.Point(186, 443);
             this.saveDecodedMessageBtn.Name = "saveDecodedMessageBtn";
-            this.saveDecodedMessageBtn.Size = new System.Drawing.Size(154, 80);
+            this.saveDecodedMessageBtn.Size = new System.Drawing.Size(178, 73);
             this.saveDecodedMessageBtn.TabIndex = 14;
             this.saveDecodedMessageBtn.Text = "Сохранить сообщение в файл";
             this.saveDecodedMessageBtn.UseVisualStyleBackColor = true;
@@ -330,28 +337,19 @@
             // decPerformBtn
             // 
             this.decPerformBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.decPerformBtn.Location = new System.Drawing.Point(6, 470);
+            this.decPerformBtn.Location = new System.Drawing.Point(9, 443);
             this.decPerformBtn.Name = "decPerformBtn";
-            this.decPerformBtn.Size = new System.Drawing.Size(98, 46);
+            this.decPerformBtn.Size = new System.Drawing.Size(171, 73);
             this.decPerformBtn.TabIndex = 13;
             this.decPerformBtn.Text = "Выполнить";
             this.decPerformBtn.UseVisualStyleBackColor = true;
             this.decPerformBtn.Click += new System.EventHandler(this.decPerformBtn_Click);
             // 
-            // progressBar2
-            // 
-            this.progressBar2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar2.Location = new System.Drawing.Point(110, 470);
-            this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(656, 46);
-            this.progressBar2.TabIndex = 12;
-            // 
             // label6
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(370, 277);
+            this.label6.Location = new System.Drawing.Point(370, 301);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(167, 17);
             this.label6.TabIndex = 11;
@@ -361,10 +359,10 @@
             // 
             this.decodedMessageRTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.decodedMessageRTB.Location = new System.Drawing.Point(373, 297);
+            this.decodedMessageRTB.Location = new System.Drawing.Point(373, 321);
             this.decodedMessageRTB.Name = "decodedMessageRTB";
             this.decodedMessageRTB.ReadOnly = true;
-            this.decodedMessageRTB.Size = new System.Drawing.Size(393, 167);
+            this.decodedMessageRTB.Size = new System.Drawing.Size(393, 194);
             this.decodedMessageRTB.TabIndex = 10;
             this.decodedMessageRTB.Text = "";
             this.decodedMessageRTB.TextChanged += new System.EventHandler(this.decodedMessageRTB_TextChanged);
@@ -372,7 +370,7 @@
             // decChangedImageChooseBtn
             // 
             this.decChangedImageChooseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.decChangedImageChooseBtn.Location = new System.Drawing.Point(292, 350);
+            this.decChangedImageChooseBtn.Location = new System.Drawing.Point(289, 394);
             this.decChangedImageChooseBtn.Name = "decChangedImageChooseBtn";
             this.decChangedImageChooseBtn.Size = new System.Drawing.Size(75, 28);
             this.decChangedImageChooseBtn.TabIndex = 9;
@@ -383,7 +381,7 @@
             // decChangedImagePathTB
             // 
             this.decChangedImagePathTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.decChangedImagePathTB.Location = new System.Drawing.Point(9, 353);
+            this.decChangedImagePathTB.Location = new System.Drawing.Point(6, 397);
             this.decChangedImagePathTB.Name = "decChangedImagePathTB";
             this.decChangedImagePathTB.ReadOnly = true;
             this.decChangedImagePathTB.Size = new System.Drawing.Size(277, 22);
@@ -393,7 +391,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 330);
+            this.label5.Location = new System.Drawing.Point(3, 374);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(227, 17);
             this.label5.TabIndex = 7;
@@ -402,7 +400,7 @@
             // decOrigImageChooseBtn
             // 
             this.decOrigImageChooseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.decOrigImageChooseBtn.Location = new System.Drawing.Point(292, 297);
+            this.decOrigImageChooseBtn.Location = new System.Drawing.Point(289, 341);
             this.decOrigImageChooseBtn.Name = "decOrigImageChooseBtn";
             this.decOrigImageChooseBtn.Size = new System.Drawing.Size(75, 28);
             this.decOrigImageChooseBtn.TabIndex = 6;
@@ -413,7 +411,7 @@
             // decOrigImagePathTB
             // 
             this.decOrigImagePathTB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.decOrigImagePathTB.Location = new System.Drawing.Point(9, 300);
+            this.decOrigImagePathTB.Location = new System.Drawing.Point(6, 344);
             this.decOrigImagePathTB.Name = "decOrigImagePathTB";
             this.decOrigImagePathTB.ReadOnly = true;
             this.decOrigImagePathTB.Size = new System.Drawing.Size(277, 22);
@@ -423,7 +421,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 277);
+            this.label4.Location = new System.Drawing.Point(3, 321);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(226, 17);
             this.label4.TabIndex = 4;
@@ -442,23 +440,15 @@
             // 
             this.saveFileDialog2.Filter = "TXT (*.txt)|*.txt";
             // 
-            // encImageTLP
+            // encodeBgWorker
             // 
-            this.encImageTLP.AllowDrop = true;
-            this.encImageTLP.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.encImageTLP.ColumnCount = 1;
-            this.encImageTLP.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.encImageTLP.Controls.Add(this.imageToEncPB, 0, 0);
-            this.encImageTLP.Location = new System.Drawing.Point(6, 6);
-            this.encImageTLP.Name = "encImageTLP";
-            this.encImageTLP.RowCount = 1;
-            this.encImageTLP.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.encImageTLP.Size = new System.Drawing.Size(393, 458);
-            this.encImageTLP.TabIndex = 13;
-            this.encImageTLP.DragDrop += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragDrop);
-            this.encImageTLP.DragEnter += new System.Windows.Forms.DragEventHandler(this.encImageTLP_DragEnter);
+            this.encodeBgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.encodeBgWorker_DoWork);
+            this.encodeBgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.encodeBgWorker_RunWorkerCompleted);
+            // 
+            // decodeBgWorker
+            // 
+            this.decodeBgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.decodeBgWorker_DoWork);
+            this.decodeBgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.decodeBgWorker_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -469,15 +459,15 @@
             this.Name = "MainForm";
             this.Text = "Image Message Encoder";
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.encodeTabPage.ResumeLayout(false);
+            this.encodeTabPage.PerformLayout();
+            this.encImageTLP.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.imageToEncPB)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.decodeTabPage.ResumeLayout(false);
+            this.decodeTabPage.PerformLayout();
             this.pictureBoxesToDecTLP.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.changedImagePB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.origImagePB)).EndInit();
-            this.encImageTLP.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -485,8 +475,8 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage encodeTabPage;
+        private System.Windows.Forms.TabPage decodeTabPage;
         private System.Windows.Forms.PictureBox imageToEncPB;
         private System.Windows.Forms.Button encImageChooseBtn;
         private System.Windows.Forms.TextBox pathToImageTB;
@@ -496,7 +486,6 @@
         private System.Windows.Forms.TextBox pathToSaveImageTB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.RichTextBox textToEncRTB;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button encPerformBtn;
@@ -509,7 +498,6 @@
         private System.Windows.Forms.Button decChangedImageChooseBtn;
         private System.Windows.Forms.TextBox decChangedImagePathTB;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ProgressBar progressBar2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RichTextBox decodedMessageRTB;
         private System.Windows.Forms.Button saveDecodedMessageBtn;
@@ -518,6 +506,8 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog2;
         private System.Windows.Forms.Label linesCountInEncTextLbl;
         private System.Windows.Forms.TableLayoutPanel encImageTLP;
+        private System.ComponentModel.BackgroundWorker encodeBgWorker;
+        private System.ComponentModel.BackgroundWorker decodeBgWorker;
     }
 }
 
